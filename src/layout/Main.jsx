@@ -27,7 +27,7 @@ class Main extends Component {
         if (str) {
             str = `&s=${str}`
         }
-        fetch(`http://www.omdbapi.com/?apikey=${this.state.key}${str}${type}`)
+        fetch(`https://www.omdbapi.com/?apikey=${this.state.key}${str}${type}`)
             .then(response => response.json())
             .then(data => {
                 this.setState({
@@ -36,7 +36,9 @@ class Main extends Component {
                     isLoading: false
                 })
             })
-            .catch(err => this.setState({ error: err.Error }))
+            .catch(err => {
+                console.error(err);
+                this.setState({ error: err, isLoading: false })})
     }
 
     render() {
