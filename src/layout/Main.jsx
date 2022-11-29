@@ -1,60 +1,58 @@
-import { Component } from "react"
+import { useEffect, useState } from "react"
 import Movies from "../components/Movies"
 import Preloader from "../components/Preloader"
 import Search from "../components/Search"
 
 const API_KEY = process.env.REACT_APP_API_KEY
 
-class Main extends Component {
-    state = {
-        movies: [],
-        isLoading: true,
-        key: API_KEY,
-        error: ''
-    }
+const Main = () => {
+    const [movies, setMovies] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
 
-    componentDidMount() {
-        this.searchMovies()
-    }
+    const searchMovies = (str = '', type = '') => {
+        setIsLoading(true)
 
-    searchMovies = (str = '', type = '') => {
-        this.setState({
-            isLoading: true
-        })
         if (type) {
             type = `&type=${type}`
         }
+
         if (str) {
             str = `&s=${str}`
         }
-        fetch(`https://www.omdbapi.com/?apikey=${this.state.key}${str}${type}`)
+
+        fetch(`https://www.omdbapi.com/?apikey=${API_KEY}${str}${type}`)
             .then(response => response.json())
             .then(data => {
-                this.setState({
-                    movies: data.Search,
-                    error: data.Error,
-                    isLoading: false
-                })
+                setMovies(data.Search)
             })
             .catch(err => {
                 console.error(err);
-                this.setState({ error: err, isLoading: false })})
+            })
+            .finally(() => setIsLoading(false))
     }
 
-    render() {
-        const { movies, isLoading } = this.state
-
-        return (
-            <main className="container content">
-                <Search searchMovies={this.searchMovies} />
-                {!isLoading ?
-                    <Movies movies={movies} /> :
-                    <Preloader />
-                }
-            </main>
+    useEffect(() => {
+        setMovies(
+            [{
+                Title: "TheBarer",
+                Year: 1989,
+                Poster: "https://avatars.githubusercontent.com/u/65025248?v=4",
+                Type: "movie",
+                imdbID: "03091989"
+            }]
         )
+    }, [])
 
-    }
+    return (
+        <main className="container content">
+            <Search searchMovies={searchMovies} />
+            {isLoading ? <Preloader /> :
+                <Movies movies={movies} />
+            }
+        </main>
+    )
+
+
 }
 
 export default Main

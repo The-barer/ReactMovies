@@ -7,7 +7,7 @@ export default function Movies(props) {
         <div className="movies">
             { movies.length ?
                 movies.map((movie) => <MovieCard key={movie.imdbID} {...movie}/>) :
-                <h3>Ничего нет</h3>
+                <h3>Nothing found</h3>
             }
         </div>
     )

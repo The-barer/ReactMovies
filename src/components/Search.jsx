@@ -1,73 +1,63 @@
-import { Component } from "react";
+import { useState } from "react";
 
-class Search extends Component {
-    state = {
-        search: '',
-        type: ''
-    }
+function Search(props) {
+    const {
+        searchMovies = Function.prototype
+    } = props
+    const [search, setSearch] = useState('')
+    const [type, setType] = useState('')
 
-    searchFunction = () => {
-        this.props.searchMovies(this.state.search, this.state.type)
-    }
-
-    handleKey = event => {
+    const handleKey = (event) => {
         if (event.key === 'Enter') {
-            this.searchFunction()
+            searchMovies(search, type)
         }
     }
 
-    handleSearch = (event) => {
-        this.setState({
-            search: event.target.value
-        })
+    const handleSearch = (event) => {
+        setSearch(event.target.value)
     }
 
-    handelCheckboxes = (event) => {
-        this.setState({
-            type: event.target.name
-        }) 
+    const handelType = (event) => {
+        setType(event.target.name)
     }
-    render() {
-        const { search, type } = this.state
 
-        return (
-            <>
-                <div className="row">
-                    <div className="input-field">
-                        <input
-                            placeholder="Search"
-                            type="search"
-                            className="validate"
-                            value={search}
-                            onChange={this.handleSearch}
-                            onKeyDown={this.handleKey}
-                        />
-                        <button className="btn search-btn" onClick={this.searchFunction}>Search</button>
-                    </div>
+    return (
+        <>
+            <div className="row">
+                <div className="input-field">
+                    <input
+                        placeholder="Search"
+                        type="search"
+                        className="validate"
+                        value={search}
+                        onChange={handleSearch}
+                        onKeyDown={handleKey}
+                    />
+                    <button className="btn search-btn" onClick={() => searchMovies(search, type)}>Search</button>
+                </div>
                 <form action="#" className="checkboxes">
                     <label>
-                        <input name="" type="radio" onChange={this.handelCheckboxes} checked={type === ''} />
+                        <input name="" type="radio" onChange={handelType} checked={type === ''} />
                         <span>All</span>
                     </label>
                     <label>
-                        <input name="movie" type="radio" onChange={this.handelCheckboxes} checked={type === 'movie'}/>
+                        <input name="movie" type="radio" onChange={handelType} checked={type === 'movie'} />
                         <span>Movies</span>
                     </label>
 
                     <label>
-                        <input name="series" type="radio" onChange={this.handelCheckboxes} checked={type === 'series'}/>
+                        <input name="series" type="radio" onChange={handelType} checked={type === 'series'} />
                         <span>Series</span>
                     </label>
 
                     <label>
-                        <input name="game" type="radio" onChange={this.handelCheckboxes} checked={type === 'game'}/>
+                        <input name="game" type="radio" onChange={handelType} checked={type === 'game'} />
                         <span>Games</span>
                     </label>
                 </form>
-                </div>
-            </>
-        )
-    }
+            </div>
+        </>
+    )
 }
 
 export default Search
